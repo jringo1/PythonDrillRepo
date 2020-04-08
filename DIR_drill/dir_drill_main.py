@@ -1,8 +1,9 @@
 
 from tkinter import *
 import tkinter as tk
+from tkinter import filedialog
 
-import GUIDrill_gui
+import dir_drill_gui
 
 class ParentWindow(Frame):
     def __init__(self, master, *args, **kwargs):
@@ -16,7 +17,12 @@ class ParentWindow(Frame):
         self.master.configure(bg="#F0F0F0")
             
         dir_drill_gui.load_gui(self)
-
+         
+def get_files(self):
+    filename = filedialog.askdirectory(initialdir="/", title="Select a File",)
+    self.txt_dir.insert(2,filename)
+    
+            
     
 
 
