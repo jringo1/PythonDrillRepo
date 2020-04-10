@@ -2,6 +2,11 @@
 from tkinter import *
 import tkinter as tk
 from tkinter import filedialog
+import os
+import sqlite3
+import sys
+import time
+import shutil
 
 import dir_drill_gui
 
@@ -17,10 +22,46 @@ class ParentWindow(Frame):
         self.master.configure(bg="#F0F0F0")
             
         dir_drill_gui.load_gui(self)
+        
+     
+def get_source(self):
+    self.path = filedialog.askdirectory(title="Select a directory")
+    #self.file_list = os.listdir(self.path)
+    self.txt_source_dir.insert(2,self.path)
+    
+
+def get_final(self):
+    self.path2 = filedialog.askdirectory(initialdir = '/', title="Select a directory")
+    #self.file_list2 = os.listdir(self.path2)
+    self.txt_final_dir.insert(2,self.path2)
+    
+
+
+conn = sqlite3.connect('file_drill.db')
+
+with conn:
+    cur = conn.cursor()
+    cur.execute("CREATE TABLE IF NOT EXISTS tbl_files( \
+        ID INTEGER PRIMARY KEY AUTOINCREMENT, \
+        col_Name VARCHAR(50), \
+        col_Type VARCHAR(50) \
+        )")
+    
+
+def send_files(self):
+    self.file_list = os.listdir(self.path)
+    for fileName in self.file_list:
+            if fileName.endswith('.txt'):
+                with conn:
+                    cur = conn.cursor()
+                    cur.execute('INSERT INTO tbl_files(col_name) VALUES (?)', (fileName,))
+                    filePath = (os.path.join(self.path, fileName))
+                    print(fileName)
+                    mod_time = os.path.getmtime(filePath)
+                    print(mod_time)
+                    shutil.move(filePath,self.path2)
          
-def get_files(self):
-    filename = filedialog.askdirectory(initialdir="/", title="Select a File",)
-    self.txt_dir.insert(2,filename)
+
     
             
     
